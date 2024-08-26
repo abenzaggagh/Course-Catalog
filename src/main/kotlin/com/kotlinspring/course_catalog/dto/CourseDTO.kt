@@ -2,6 +2,6 @@ package com.kotlinspring.course_catalog.dto
 
 data class CourseDTO(
     val id: Int?,
-    val name: String,
+    var name: String,
     val category: String,
 )
