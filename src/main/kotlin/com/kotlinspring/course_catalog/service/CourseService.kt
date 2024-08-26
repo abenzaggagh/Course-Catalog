@@ -19,8 +19,12 @@ class CourseService(val courseRepository: CourseRepository) {
         return course.let { CourseDTO(it.id, it.name, it.category) }
     }
 
-    fun retrieveAllCourses(): List<CourseDTO> {
-        return courseRepository.findAll().map { CourseDTO(it.id, it.name, it.category) }
+    fun retrieveAllCourses(courseName: String?): List<CourseDTO> {
+        val course = courseName?.let {
+            courseRepository.findCoursesByName(courseName)
+        } ?: courseRepository.findAll()
+
+        return course.map { CourseDTO(it.id, it.name, it.category) }
     }
 
     fun updateCourse(courseId: Int, courseDTO: CourseDTO): CourseDTO {

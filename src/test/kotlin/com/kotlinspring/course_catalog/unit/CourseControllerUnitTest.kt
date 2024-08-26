@@ -50,10 +50,31 @@ class CourseControllerUnitTest {
     }
 
     @Test
+    fun testAddCourse_Validation() {
+        var courseDTO = CourseDTO(1, "", "")
+
+        every {
+            courseService.addCourse(any())
+        } returns courseDTO
+
+        var result = webTestClient.post()
+            .uri("/v1/courses")
+            .bodyValue(courseDTO)
+            .exchange()
+            .expectStatus().isBadRequest
+            .expectBodyList(String::class.java)
+            .returnResult()
+            .responseBody
+
+        Assertions.assertEquals(1, result!!.size)
+
+    }
+
+    @Test
     fun testGetAllCourses() {
 
         every {
-            courseService.retrieveAllCourses()
+            courseService.retrieveAllCourses(any())
         } returns listOf(courseDTO())
 
 

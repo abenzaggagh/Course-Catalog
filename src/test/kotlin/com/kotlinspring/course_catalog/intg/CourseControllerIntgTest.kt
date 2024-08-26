@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.reactive.server.WebTestClient
+import org.springframework.web.util.UriComponentsBuilder
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -53,6 +54,27 @@ class CourseControllerIntgTest {
         val result = webTestClient
             .get()
             .uri("/v1/courses")
+            .exchange()
+            .expectStatus().isOk
+            .expectBodyList(CourseDTO::class.java)
+            .returnResult()
+            .responseBody
+
+        Assertions.assertEquals(1, result!!.size)
+        Assertions.assertEquals("Java", result[0].name)
+    }
+
+    @Test
+    fun retrieveCourse_Name() {
+
+        val uri = UriComponentsBuilder
+            .fromUriString("/v1/courses")
+            .queryParam("courseName", "Java")
+            .toUriString()
+
+        val result = webTestClient
+            .get()
+            .uri(uri)
             .exchange()
             .expectStatus().isOk
             .expectBodyList(CourseDTO::class.java)
